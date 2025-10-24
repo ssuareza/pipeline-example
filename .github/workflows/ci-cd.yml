@@ -1,11 +1,8 @@
-name: Pipeline with Argocd
+name: Pipeline with SonarQube, Trivy, and Docker Hub
 
 on:
   push:
   pull_request:
-
-permissions:
-  contents: write # allows the workflow to git push
 
 env:
   BRANCH_NAME: ${{ github.ref_name }}
@@ -36,7 +33,7 @@ jobs:
         run: echo "$HOME/go/bin" >> $GITHUB_PATH
 
       - name: Lint Go code
-        working-directory: ./app
+        working-directory: ./
         run: golangci-lint run
 
   test:
@@ -53,7 +50,7 @@ jobs:
           go-version: "1.22"
 
       - name: Run Go tests
-        working-directory: ./app
+        working-directory: ./
         run: go test ./... -v
 
   build-and-push:
@@ -84,7 +81,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: ./app
+          context: ./
           push: true
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.SHA }}
