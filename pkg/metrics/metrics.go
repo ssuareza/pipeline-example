@@ -71,5 +71,8 @@ func Health(w http.ResponseWriter, req *http.Request) {
 		"message": "service is healthy",
 	}
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(status)
+	if err := json.NewEncoder(w).Encode(status); err != nil {
+		http.Error(w, "failed to encode response", http.StatusInternalServerError)
+		return
+	}
 }
