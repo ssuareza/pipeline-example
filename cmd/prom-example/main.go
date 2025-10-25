@@ -1,6 +1,7 @@
 package main
 
 import (
+	"log"
 	"net/http"
 	"prom-example/pkg/metrics"
 
@@ -25,5 +26,8 @@ func main() {
 	instrumentedHandler := metrics.InstrumentHandler(mux)
 
 	// Start the server with the instrumented handler
-	http.ListenAndServe(":2112", instrumentedHandler)
+	err := http.ListenAndServe(":2112", instrumentedHandler)
+	if err != nil {
+		log.Fatalf("failed to start server: %v", err)
+	}
 }
