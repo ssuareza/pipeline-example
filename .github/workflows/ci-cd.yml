@@ -82,3 +82,19 @@ jobs:
           tags: |
             ${{ env.IMAGE_NAME }}:${{ env.SHA }}
             ${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
+
+  trivy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run Trivy scan on Docker image
+        uses: aquasecurity/trivy-action@v2
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:${{ env.SHA }}
+          format: table
+          exit-code: "1" # fail job if vulnerabilities found
+          severity: CRITICAL,HIGH # only show these
