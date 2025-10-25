@@ -26,15 +26,11 @@ jobs:
         with:
           go-version: "1.22"
 
-      - name: Install golangci-lint
-        run: |
-          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $HOME/go/bin v1.59.0
-      - name: Add golangci-lint to PATH
-        run: echo "$HOME/go/bin" >> $GITHUB_PATH
-
       - name: Lint Go code
-        working-directory: ./
-        run: golangci-lint run
+        uses: golangci/golangci-lint-action@v6
+        with:
+          args: --timeout=10m --concurrency=2
+          skip-cache: false
 
   test:
     needs: lint
