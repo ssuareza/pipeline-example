@@ -12,6 +12,7 @@ env:
   GIT_USERNAME: ${{ secrets.GIT_USERNAME }}
   IMAGE_NAME: ${{ github.repository }}
   SHA: ${{ github.sha }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
   lint:
@@ -48,6 +49,17 @@ jobs:
       - name: Run Go tests
         working-directory: ./
         run: go test ./... -v
+
+  sonarqube:
+    name: SonarQube Analysis
+    runs-on: self-hosted
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for better relevancy of analysis
+      - uses: sonarsource/sonarqube-scan-action@v3
+        env:
+          SONAR_TOKEN: ${{ env.SONAR_TOKEN }}
 
   build-and-push:
     needs: test
