@@ -70,7 +70,7 @@ jobs:
           projectBaseDir: app/src
           args: >
             -Dsonar.organization=ssuareza
-            -Dsonar.projectKey=pipeline-example
+            -Dsonar.projectKey=ssuareza_pipeline-example
             -Dsonar.projectBaseDir=./
             -Dsonar.verbose=true
         env:
